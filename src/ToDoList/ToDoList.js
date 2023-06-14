@@ -1,5 +1,6 @@
 import React from 'react';
 import ToDoTask from '../ToDoTask/ToDoTask';
+import PropTypes from 'prop-types'
 import "./ToDoList.css"
 
 const ToDoList = ({ todos, onDeleted, onToggleCompleted, onToggleEdited }) => {
@@ -22,6 +23,20 @@ const ToDoList = ({ todos, onDeleted, onToggleCompleted, onToggleEdited }) => {
       {elements}
     </ul>
   )
+}
+
+ToDoList.defaultProps = {
+  todos: [],
+  onToggleCompleted: () => {},
+  onToggleEdited: () => {},
+  onDeleted: () => {}
+}
+
+ToDoList.propTypes = {
+  todos: PropTypes.array,
+  onToggleCompleted: PropTypes.func,
+  onToggleEdited: PropTypes.func,
+  onDeleted: PropTypes.func
 }
 
 export default ToDoList

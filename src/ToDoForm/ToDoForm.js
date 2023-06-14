@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import "./ToDoForm.css"
 
 export default class ToDoForm extends Component {
@@ -39,4 +40,12 @@ export default class ToDoForm extends Component {
         </header>
         )
     }
+}
+
+ToDoForm.defaultProps = {
+    onAdd: () => {}
+}
+
+ToDoForm.propTypes = {
+    onAdd: PropTypes.func
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import './ToDoTask.css'
+import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns';
-import KG from 'date-fns/locale/en-AU';
 
 export default class ToDoTask extends React.Component {
 
@@ -52,4 +52,15 @@ export default class ToDoTask extends React.Component {
             </div>
         )
     }
+}
+
+ToDoTask.defaultProps = {
+    completed: false,
+    edited: false,
+    date: new Date()
+}
+
+ToDoTask.propTypes ={
+    completed: PropTypes.bool,
+    edited: PropTypes.bool,
 }
