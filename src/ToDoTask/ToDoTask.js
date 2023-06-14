@@ -1,0 +1,55 @@
+import React from 'react';
+import './ToDoTask.css'
+import { formatDistanceToNow } from 'date-fns';
+import KG from 'date-fns/locale/en-AU';
+
+export default class ToDoTask extends React.Component {
+
+    state = {
+        label: this.props.label
+    }
+
+    onChange = (e) => {
+        this.setState({
+            label: e.target.value
+        })
+    }
+
+    render() {
+        const { completed, edited,date } = this.props;
+        let className = "item"
+        if (completed) {
+            className += " completed"
+        }
+        if (edited) return (
+            <form className='edited'>
+                <button className="bi bi-check-lg"
+                    onClick={this.props.onToggleEdited}></button>
+                <input className='edited__input' value={this.state.label}
+                    onChange={this.onChange} />
+            </form>
+        )
+        return (
+            <div className='task'>
+                <div className={className}>
+                    <input type='checkbox'
+                        onClick={this.props.onToggleCompleted}
+                    />
+                    <div className='text'>{this.state.label}</div>
+                </div>
+                <span className="task__time">
+                    {`created ${formatDistanceToNow(date, {
+                        includeSeconds: true,
+                        addSuffix: true
+                    })}`}
+                </span>
+                <div className='task__btn'>
+                    <button className="bi bi-pencil-fill"
+                        onClick={this.props.onToggleEdited}></button>
+                    <button className="bi bi-trash3-fill"
+                        onClick={this.props.onDeleted}></button>
+                </div>
+            </div>
+        )
+    }
+}

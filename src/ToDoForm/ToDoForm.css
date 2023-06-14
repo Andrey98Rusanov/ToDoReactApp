@@ -1,0 +1,54 @@
+.ToDoForm{
+    width: 100%;
+    border-bottom: none;
+}
+
+.bi-check2-circle{
+    color: blue;
+}
+
+.ToDo__title{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.ToDoForm input{
+    width: 100%;
+    height: border-box;
+    border: none;
+    margin-bottom: -1px;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.ToDoForm input:active,
+.ToDoForm input:focus{
+    outline: none;
+}
+
+button, 
+button:active, 
+button:focus {
+    outline: none;
+}
+
+.ToDoForm input::placeholder{
+    font-size: 20px;
+}
+
+.add__form{
+    display: flex;
+    height: max-content;
+}
+
+.add__form button{
+    border: 1px solid rgba(0,0,0,.125);
+	background-color: inherit;
+	font-size: 24px;
+    margin-left: -1px;
+    margin-bottom: -1px;
+}
+
+.add__form button:hover{
+    color: blue;
+}
