@@ -1,5 +1,4 @@
 import React from 'react';
-import { formatDistanceToNow } from 'date-fns'
 import ToDoForm from '../ToDoForm/ToDoForm';
 import ToDoList from '../ToDoList/ToDoList';
 import Footer from '../Footer/Footer';
@@ -12,7 +11,7 @@ export default class App extends React.Component {
   state = {
     toDoData: []
   }
-
+  
   createToDoItem(label) {
     return {
       label,
@@ -76,7 +75,6 @@ export default class App extends React.Component {
       if (!oldTask.completed) return {
         toDoData: newArr
       }
-      else alert('You cant edit completed task')
     })
   }
 
