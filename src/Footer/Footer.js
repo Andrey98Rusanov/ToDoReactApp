@@ -4,7 +4,7 @@ import Filters from '../Filters/Filters';
 import './Footer.css'
 
 
-const Footer = ({completedCount, statusFilter, clearCompleted}) => {
+function Footer({completedCount, statusFilter, clearCompleted}) {
     return (
       <div className='Footer'>
         <span>{completedCount} items left</span>

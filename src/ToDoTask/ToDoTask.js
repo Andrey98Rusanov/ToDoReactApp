@@ -24,7 +24,7 @@ export default class ToDoTask extends React.Component {
         if (edited) return (
             <form className='edited'>
                 <button className="bi bi-check-lg"
-                    onClick={this.props.onToggleEdited}></button>
+                    onClick={this.props.onToggleEdited} />
                 <input className='edited__input' value={this.state.label}
                     onChange={this.onChange} />
             </form>
@@ -45,9 +45,9 @@ export default class ToDoTask extends React.Component {
                 </span>
                 <div className='task__btn'>
                     <button className="bi bi-pencil-fill"
-                        onClick={this.props.onToggleEdited}></button>
+                        onClick={this.props.onToggleEdited} />
                     <button className="bi bi-trash3-fill"
-                        onClick={this.props.onDeleted}></button>
+                        onClick={this.props.onDeleted} />
                 </div>
             </div>
         )

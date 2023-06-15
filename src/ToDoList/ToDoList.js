@@ -1,9 +1,9 @@
 import React from 'react';
-import ToDoTask from '../ToDoTask/ToDoTask';
 import PropTypes from 'prop-types'
+import ToDoTask from '../ToDoTask/ToDoTask';
 import "./ToDoList.css"
 
-const ToDoList = ({ todos, onDeleted, onToggleCompleted, onToggleEdited }) => {
+function ToDoList({ todos, onDeleted, onToggleCompleted, onToggleEdited }) {
   const elements = todos.map((el) => {
     const { id,vision, ...items } = el
     let className = "list-group-item"

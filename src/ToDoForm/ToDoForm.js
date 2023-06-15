@@ -27,7 +27,7 @@ export default class ToDoForm extends Component {
         return (
         <header className="ToDoForm">
             <h1 className='ToDo__title'>
-                <i className="bi bi-check2-circle"></i>
+                <i className="bi bi-check2-circle" />
                 ToDo's
             </h1>
             <form className='add__form'
@@ -35,7 +35,7 @@ export default class ToDoForm extends Component {
                 <input className='add__form-input' placeholder="What needs to be done?" autoFocus 
                 value={this.state.label}
                 onChange = {this.onLabelChange}/>
-                <button className="bi bi-check-lg"></button>
+                <button className="bi bi-check-lg" />
             </form>
         </header>
         )

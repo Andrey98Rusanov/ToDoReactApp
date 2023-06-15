@@ -81,7 +81,7 @@ export default class App extends React.Component {
   statusFilter = (text) => {
     if (text === "completed"){
       this.setState(({ toDoData })=> {
-        for (let el of toDoData){
+        for (const el of toDoData){
           if (el.completed === false){
             el.vision = false
           } else el.vision = true
@@ -93,7 +93,7 @@ export default class App extends React.Component {
     }
     if (text === "all"){
       this.setState(({ toDoData })=> {
-        for (let el of toDoData){
+        for (const el of toDoData){
           if (el.vision === false){
             el.vision = true
           }
@@ -105,7 +105,7 @@ export default class App extends React.Component {
     }
     if (text === "active"){
       this.setState(({ toDoData })=> {
-        for (let el of toDoData){
+        for (const el of toDoData){
           if (el.completed === true){
             el.vision = false
           } else el.vision = true
@@ -119,13 +119,13 @@ export default class App extends React.Component {
 
   clearCompleted = () => {
     this.setState(({toDoData}) => {
-      let arrId = []
-      for (let el of toDoData){
+      const arrId = []
+      for (const el of toDoData){
         if (el.completed === true){
           arrId.push(el.id)
         }
       }
-      for (let el of arrId){
+      for (const el of arrId){
         this.deleteTask(el)
       }
     })
