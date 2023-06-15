@@ -57,10 +57,19 @@ export default class ToDoTask extends React.Component {
 ToDoTask.defaultProps = {
     completed: false,
     edited: false,
-    date: new Date()
+    date: new Date(),
+    label: "hey!",
+    onToggleCompleted: () => {},
+    onToggleEdited: () => {},
+    onDeleted: () => {}
 }
 
 ToDoTask.propTypes ={
     completed: PropTypes.bool,
     edited: PropTypes.bool,
+    label: PropTypes.string,
+    date: PropTypes.any,
+    onToggleCompleted: PropTypes.func,
+    onToggleEdited: PropTypes.func,
+    onDeleted: PropTypes.func
 }
