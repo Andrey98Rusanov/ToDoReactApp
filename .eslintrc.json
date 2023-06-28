@@ -33,6 +33,8 @@
     "jsx-a11y/no-autofocus": 0,
     "jsx-a11y/control-has-associated-label": 0,
     "react/jsx-props-no-spreading": 0,
-    "react/forbid-prop-types": 0
+    "react/forbid-prop-types": 0,
+    "no-shadow-restricted-names": 0,
+    "no-shadow": 0
   }
 }

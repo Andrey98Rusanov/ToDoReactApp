@@ -12,7 +12,8 @@
 }
 
 .text{
-	width: 300px;
+	width: 250px;
+	margin-right: 10px;
 }
 
 .active{
@@ -43,8 +44,9 @@ button{
 	display: flex;
 	justify-content: space-between;
 	font-size: 20px;
-	height: max-content;
+	height: 60px;
 	align-items: center;
+	padding: 10px;
 }
 
 .edited__input{
@@ -60,7 +62,6 @@ button{
 .task__btn{
 	text-decoration: none;
 	display: flex;
-	gap: 20px;
 }
 
 .edited{
@@ -87,6 +88,6 @@ button:focus {
 }
 
 .task__time{
-	font-size: 17px;
+	font-size: 14px;
 
 }

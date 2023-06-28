@@ -2,6 +2,7 @@ import React from "react";
 import "./ToDoTask.css";
 import PropTypes from "prop-types";
 import { formatDistanceToNow } from "date-fns";
+import Timer from "../Timer/Timer";
 
 export default class ToDoTask extends React.Component {
   state = {
@@ -15,7 +16,8 @@ export default class ToDoTask extends React.Component {
   };
 
   render() {
-    const { completed, edited, date } = this.props;
+    const { completed, edited, date, time, timeToTask } = this.props;
+
     let className = "item";
     if (completed) {
       className += " completed";
@@ -40,10 +42,11 @@ export default class ToDoTask extends React.Component {
           <input type="checkbox" onClick={this.props.onToggleCompleted} />
           <div className="text">{this.state.label}</div>
         </div>
+        <Timer time={time} timeToTask={(n) => timeToTask(n)} toDoData = {this.props.toDoData} id = {this.props.id}/>
         <span className="task__time">
-          {`created ${formatDistanceToNow(date, {
+          {`${formatDistanceToNow(date, {
             includeSeconds: true,
-            addSuffix: true,
+            // addSuffix: true,
           })}`}
         </span>
         <div className="task__btn">
@@ -69,6 +72,10 @@ ToDoTask.defaultProps = {
   onToggleCompleted: () => {},
   onToggleEdited: () => {},
   onDeleted: () => {},
+  toDoData: [],
+  id: 0,
+  timeToTask: () => {},
+  time: "00:00"
 };
 
 ToDoTask.propTypes = {
@@ -79,4 +86,8 @@ ToDoTask.propTypes = {
   onToggleCompleted: PropTypes.func,
   onToggleEdited: PropTypes.func,
   onDeleted: PropTypes.func,
+  toDoData: PropTypes.array,
+  id: PropTypes.number,
+  timeToTask: PropTypes.func,
+  time: PropTypes.string
 };

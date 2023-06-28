@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import ToDoTask from "../ToDoTask/ToDoTask";
 import "./ToDoList.css";
 
-function ToDoList({ todos, onDeleted, onToggleCompleted, onToggleEdited }) {
+function ToDoList({ todos, onDeleted, onToggleCompleted, onToggleEdited, timeToTask }) {
   const elements = todos.map((el) => {
     const { id, vision, ...items } = el;
     let className = "list-group-item";
@@ -12,6 +12,9 @@ function ToDoList({ todos, onDeleted, onToggleCompleted, onToggleEdited }) {
       <li key={id} className={className}>
         <ToDoTask
           {...items}
+          id = {id}
+          toDoData = {todos}
+          timeToTask={(n) => timeToTask(n, id)}
           onDeleted={() => onDeleted(id)}
           onToggleCompleted={() => onToggleCompleted(id)}
           onToggleEdited={() => onToggleEdited(id)}
@@ -28,6 +31,7 @@ ToDoList.defaultProps = {
   onToggleCompleted: () => {},
   onToggleEdited: () => {},
   onDeleted: () => {},
+  timeToTask: () => {}
 };
 
 ToDoList.propTypes = {
@@ -35,6 +39,7 @@ ToDoList.propTypes = {
   onToggleCompleted: PropTypes.func,
   onToggleEdited: PropTypes.func,
   onDeleted: PropTypes.func,
+  timeToTask: PropTypes.func
 };
 
 export default ToDoList;

@@ -1,0 +1,16 @@
+.Timer{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.Timer button{
+	border: none;
+	background-color: inherit;
+	font-size: 20px;
+}
+
+.Timer button:hover{
+	color: blue;
+}
