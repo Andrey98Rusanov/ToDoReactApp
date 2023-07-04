@@ -13,6 +13,16 @@ export default class ToDoTask extends React.Component {
   };
 
   componentDidMount() {
+    document.addEventListener(
+      "click",
+      this.handleClickOutside.bind(this),
+      true
+    );
+    document.addEventListener(
+      "keydown",
+      this.handleClickOutside.bind(this),
+      true
+    );
     this.myInterval = setInterval(() => {
       const { hours, minutes, seconds, pause } = this.state;
       if (pause !== true) {
@@ -38,7 +48,26 @@ export default class ToDoTask extends React.Component {
   }
 
   componentWillUnmount() {
+    document.removeEventListener(
+      "click",
+      this.handleClickOutside.bind(this),
+      true
+    );
     clearInterval(this.myInterval);
+  }
+
+  handleClickOutside(event) {
+    const domNode = document.querySelector(".edited");
+    if (domNode) {
+      if (!domNode.contains(event.target) && this.props.edited) {
+        this.setState({ label: this.props.label });
+        this.props.onToggleEdited(this.props.label);
+      }
+      if (event.key === "Escape" && this.props.edited) {
+        this.setState({ label: this.props.label });
+        this.props.onToggleEdited(this.props.label);
+      }
+    }
   }
 
   onStopClick() {
@@ -64,7 +93,7 @@ export default class ToDoTask extends React.Component {
     const { hours, minutes, seconds } = this.state;
     const arr = this.props.time.split(":");
     const res = Number(arr[0]) * 60 + Number(arr[1]);
-    if (res === hours * 60 + minutes && this.state.pause === false) {
+    if (res === minutes * 60 + seconds && this.state.pause === false) {
       this.props.timeToTask([hours, minutes, seconds]);
       this.setState({
         pause: true,
@@ -97,6 +126,7 @@ export default class ToDoTask extends React.Component {
             className="edited__input"
             value={this.state.label}
             onChange={this.onChange}
+            autoFocus
           />
         </form>
       );
@@ -104,7 +134,7 @@ export default class ToDoTask extends React.Component {
     const { hours, minutes, seconds, pause } = this.state;
     const startClass = pause ? "bi bi-skip-start" : "bi bi-stop-fill";
     const timeLimit =
-      hours * 60 + minutes === this.timeOff() ? (
+      minutes * 60 + seconds === this.timeOff() ? (
         "time off"
       ) : (
         <span>
@@ -139,7 +169,7 @@ export default class ToDoTask extends React.Component {
         <div className="task__btn">
           <button
             className="bi bi-pencil-fill"
-            onClick={this.props.onToggleEdited}
+            onClick={() => this.props.onToggleEdited(this.state.label)}
           />
           <button
             className="bi bi-trash3-fill"

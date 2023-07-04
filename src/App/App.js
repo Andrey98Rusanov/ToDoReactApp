@@ -54,14 +54,14 @@ export default class App extends React.Component {
     });
   };
 
-  onToggleEdited = (id) => {
-    console.log(this.state.toDoData)
+  onToggleEdited = (id, text) => {
     this.setState(({ toDoData }) => {
       const idx = toDoData.findIndex((el) => el.id === id);
       const oldTask = toDoData[idx];
       const newTask = {
         ...oldTask,
         edited: !oldTask.edited,
+        label: text,
       };
       const before = toDoData.slice(0, idx);
       const after = toDoData.slice(idx + 1);
@@ -127,12 +127,12 @@ export default class App extends React.Component {
   };
 
   timeToTask = (arr, id) => {
-    const {toDoData} = this.state;
+    const { toDoData } = this.state;
     const idx = toDoData.findIndex((el) => el.id === id);
     const task = toDoData[idx];
     task.timer = arr;
-    this.setState({toDoData});
-  }
+    this.setState({ toDoData });
+  };
 
   createToDoItem(label, taskTime) {
     return {
@@ -143,7 +143,7 @@ export default class App extends React.Component {
       vision: true,
       date: new Date(),
       time: taskTime,
-      timer: [0,0,0]
+      timer: [0, 0, 0],
     };
   }
 

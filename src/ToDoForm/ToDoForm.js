@@ -53,7 +53,6 @@ export default class ToDoForm extends Component {
             placeholder="hh:mm"
             onChange={this.onTimeChange}/>
             <button className="time_button" type="submit"/>
-            <span>hh:mm</span>
         </form>
       </header>
     );

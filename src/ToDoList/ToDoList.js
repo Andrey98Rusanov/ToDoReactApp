@@ -17,7 +17,7 @@ function ToDoList({ todos, onDeleted, onToggleCompleted, onToggleEdited, timeToT
           timeToTask={(n) => timeToTask(n, id)}
           onDeleted={() => onDeleted(id)}
           onToggleCompleted={() => onToggleCompleted(id)}
-          onToggleEdited={() => onToggleEdited(id)}
+          onToggleEdited={(label) => onToggleEdited(id, label)}
         />
       </li>
     );
