@@ -1,185 +1,145 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ToDoTask.css";
 import PropTypes from "prop-types";
 import { formatDistanceToNow } from "date-fns";
 
-export default class ToDoTask extends React.Component {
-  state = {
-    label: this.props.label,
-    minutes: this.props.toDoData[this.findTimerId()].timer[1],
-    seconds: this.props.toDoData[this.findTimerId()].timer[2],
-    hours: this.props.toDoData[this.findTimerId()].timer[0],
-    pause: false,
-  };
-
-  componentDidMount() {
-    document.addEventListener(
-      "click",
-      this.handleClickOutside.bind(this),
-      true
-    );
-    document.addEventListener(
-      "keydown",
-      this.handleClickOutside.bind(this),
-      true
-    );
-    this.myInterval = setInterval(() => {
-      const { hours, minutes, seconds, pause } = this.state;
-      if (pause !== true) {
-        this.props.timeToTask([hours, minutes, seconds]);
-        this.setState(({ seconds }) => ({
-          seconds: seconds + 1,
-        }));
-      }
-      if (seconds === 59) {
-        this.setState(({ minutes }) => ({
-          minutes: minutes + 1,
-          seconds: 0,
-        }));
-      }
-      if (minutes === 59 && seconds === 59) {
-        this.setState(({ hours }) => ({
-          hours: hours + 1,
-          minutes: 0,
-          seconds: 0,
-        }));
-      }
-    }, 1000);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener(
-      "click",
-      this.handleClickOutside.bind(this),
-      true
-    );
-    clearInterval(this.myInterval);
-  }
-
-  handleClickOutside(event) {
-    const domNode = document.querySelector(".edited");
-    if (domNode) {
-      if (!domNode.contains(event.target) && this.props.edited) {
-        this.setState({ label: this.props.label });
-        this.props.onToggleEdited(this.props.label);
-      }
-      if (event.key === "Escape" && this.props.edited) {
-        this.setState({ label: this.props.label });
-        this.props.onToggleEdited(this.props.label);
-      }
-    }
-  }
-
-  onStopClick() {
-    this.setState(({ pause }) => ({
-      pause: !pause,
-    }));
-  }
-
-  onRestartClick() {
-    this.setState({
-      minutes: 0,
-      seconds: 0,
-    });
-  }
-
-  onChange = (e) => {
-    this.setState({
-      label: e.target.value,
-    });
-  };
-
-  timeOff() {
-    const { hours, minutes, seconds } = this.state;
-    const arr = this.props.time.split(":");
-    const res = Number(arr[0]) * 60 + Number(arr[1]);
-    if (res === minutes * 60 + seconds && this.state.pause === false) {
-      this.props.timeToTask([hours, minutes, seconds]);
-      this.setState({
-        pause: true,
-      });
-    }
-    return res;
-  }
-
-  findTimerId() {
-    const { toDoData, id } = this.props;
+function ToDoTask(props) {
+  function findTimerId() {
+    const { toDoData, id } = props;
     const idx = toDoData.findIndex((el) => el.id === id);
     return idx;
   }
 
-  render() {
-    const { completed, edited, date } = this.props;
+  const [label, setLabel] = useState(props.label);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(
+    props.toDoData[findTimerId()].timer[1]
+  );
+  const [seconds, setSeconds] = useState(
+    props.toDoData[findTimerId()].timer[2]
+  );
+  const [pause, setPause] = useState(false);
 
-    let className = "item";
-    if (completed) {
-      className += " completed";
+  const tick = () => {
+    if (pause) return;
+    props.timeToTask([hours, minutes, seconds]);
+    setSeconds((prev) => prev + 1);
+    if (seconds === 59) {
+      setMinutes((prev) => prev + 1);
+      setSeconds(0);
     }
-    if (edited)
-      return (
-        <form className="edited">
-          <button
-            className="bi bi-check-lg"
-            onClick={this.props.onToggleEdited}
-          />
-          <input
-            className="edited__input"
-            value={this.state.label}
-            onChange={this.onChange}
-            autoFocus
-          />
-        </form>
-      );
+  };
 
-    const { hours, minutes, seconds, pause } = this.state;
-    const startClass = pause ? "bi bi-skip-start" : "bi bi-stop-fill";
-    const timeLimit =
-      minutes * 60 + seconds === this.timeOff() ? (
-        "time off"
-      ) : (
-        <span>
-          {hours < 10 ? `0${hours}` : hours}:
-          {minutes < 10 ? `0${minutes}` : minutes}:
-          {seconds < 10 ? `0${seconds}` : seconds}
-        </span>
-      );
-
-    return (
-      <div className="task">
-        <div className={className}>
-          <input type="checkbox" onClick={this.props.onToggleCompleted} />
-          <div className="text">{this.state.label}</div>
-        </div>
-        <div className="Timer">
-          {timeLimit}
-          {timeLimit === "time off" ? null : (
-            <button className={startClass} onClick={() => this.onStopClick()} />
-          )}
-          <button
-            className="bi bi-arrow-repeat"
-            onClick={() => this.onRestartClick()}
-          />
-        </div>
-        <span className="task__time">
-          {`${formatDistanceToNow(date, {
-            includeSeconds: true,
-            // addSuffix: true,
-          })}`}
-        </span>
-        <div className="task__btn">
-          <button
-            className="bi bi-pencil-fill"
-            onClick={() => this.props.onToggleEdited(this.state.label)}
-          />
-          <button
-            className="bi bi-trash3-fill"
-            onClick={this.props.onDeleted}
-          />
-        </div>
-      </div>
-    );
+  function handleClickOutside(event) {
+    const domNode = document.querySelector(".edited");
+    if (domNode) {
+      if (!domNode.contains(event.target) || event.key === "Escape") {
+        setLabel(props.label);
+        props.onToggleEdited(props.label);
+      }
+    }
   }
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    document.addEventListener("keydown", handleClickOutside, true);
+    const myInterval = setInterval(() => tick(), 1000);
+    return function () {
+      document.removeEventListener("click", handleClickOutside, true);
+      clearInterval(myInterval);
+    };
+  }, [pause, handleClickOutside, props.edited]);
+
+  function onStopClick() {
+    setPause((prev) => !prev);
+  }
+
+  function onRestartClick() {
+    setMinutes(0);
+    setSeconds(0);
+  }
+
+  const onChange = (e) => {
+    setLabel(e.target.value);
+  };
+
+  function timeOff() {
+    const arr = props.time.split(":");
+    const res = Number(arr[0]) * 60 + Number(arr[1]);
+    if (res === minutes * 60 + seconds && pause === false) {
+      props.timeToTask([hours, minutes, seconds]);
+      setPause(true);
+    }
+    return res;
+  }
+
+  const { completed, edited, date } = props;
+
+  let className = "item";
+  if (completed) {
+    className += " completed";
+  }
+  if (edited)
+    return (
+      <form className="edited">
+        <button
+          className="bi bi-check-lg"
+          onClick={() => props.onToggleEdited(label)}
+        />
+        <input
+          className="edited__input"
+          value={label}
+          onChange={onChange}
+          autoFocus
+        />
+      </form>
+    );
+
+  const startClass = pause ? "bi bi-skip-start" : "bi bi-stop-fill";
+  const timeLimit =
+    minutes * 60 + seconds === timeOff() ? (
+      "time off"
+    ) : (
+      <span>
+        {hours < 10 ? `0${hours}` : hours}:
+        {minutes < 10 ? `0${minutes}` : minutes}:
+        {seconds < 10 ? `0${seconds}` : seconds}
+      </span>
+    );
+
+  return (
+    <div className="task">
+      <div className={className}>
+        <input type="checkbox" onClick={props.onToggleCompleted} />
+        <div className="text">{label}</div>
+      </div>
+      <div className="Timer">
+        {timeLimit}
+        {timeLimit === "time off" ? null : (
+          <button className={startClass} onClick={() => onStopClick()} />
+        )}
+        <button
+          className="bi bi-arrow-repeat"
+          onClick={() => onRestartClick()}
+        />
+      </div>
+      <span className="task__time">
+        {`${formatDistanceToNow(date, {
+          includeSeconds: true,
+        })}`}
+      </span>
+      <div className="task__btn">
+        <button
+          className="bi bi-pencil-fill"
+          onClick={() => props.onToggleEdited(label)}
+        />
+        <button className="bi bi-trash3-fill" onClick={props.onDeleted} />
+      </div>
+    </div>
+  );
 }
+
+export default ToDoTask;
 
 ToDoTask.defaultProps = {
   completed: false,
