@@ -11,18 +11,17 @@ function ToDoTask(props) {
   }
 
   const [label, setLabel] = useState(props.label);
-  const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(
-    props.toDoData[findTimerId()].timer[1]
+    props.toDoData[findTimerId()].timer[0]
   );
   const [seconds, setSeconds] = useState(
-    props.toDoData[findTimerId()].timer[2]
+    props.toDoData[findTimerId()].timer[1]
   );
   const [pause, setPause] = useState(false);
 
   const tick = () => {
     if (pause) return;
-    props.timeToTask([hours, minutes, seconds]);
+    props.timeToTask([minutes, seconds]);
     setSeconds((prev) => prev + 1);
     if (seconds === 59) {
       setMinutes((prev) => prev + 1);
@@ -33,19 +32,20 @@ function ToDoTask(props) {
   function handleClickOutside(event) {
     const domNode = document.querySelector(".edited");
     if (domNode) {
-      if (!domNode.contains(event.target) || event.key === "Escape") {
-        setLabel(props.label);
+      if (!domNode.contains(event.target) && props.edited || event.key === "Escape" && props.edited) {
         props.onToggleEdited(props.label);
+        setLabel(props.label);
       }
     }
   }
 
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside, true);
     document.addEventListener("keydown", handleClickOutside, true);
+    document.addEventListener("click", handleClickOutside, true);
     const myInterval = setInterval(() => tick(), 1000);
-    return function () {
+    return  () => {
       document.removeEventListener("click", handleClickOutside, true);
+      document.removeEventListener("keydown", handleClickOutside, true);
       clearInterval(myInterval);
     };
   }, [pause, handleClickOutside, props.edited]);
@@ -67,7 +67,7 @@ function ToDoTask(props) {
     const arr = props.time.split(":");
     const res = Number(arr[0]) * 60 + Number(arr[1]);
     if (res === minutes * 60 + seconds && pause === false) {
-      props.timeToTask([hours, minutes, seconds]);
+      props.timeToTask([minutes, seconds]);
       setPause(true);
     }
     return res;
@@ -101,7 +101,6 @@ function ToDoTask(props) {
       "time off"
     ) : (
       <span>
-        {hours < 10 ? `0${hours}` : hours}:
         {minutes < 10 ? `0${minutes}` : minutes}:
         {seconds < 10 ? `0${seconds}` : seconds}
       </span>

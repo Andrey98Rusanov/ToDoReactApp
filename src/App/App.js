@@ -1,61 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import ToDoForm from "../ToDoForm/ToDoForm";
 import ToDoList from "../ToDoList/ToDoList";
 import Footer from "../Footer/Footer";
 import "./App.css";
 
-export default class App extends React.Component {
-  taskId = 1;
+function App() {
+  const [id, setId] = useState(1);
+  const [toDoData, setToDoData] = useState([]);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      toDoData: [],
+  function createToDoItem(label, taskTime) {
+    setId((id) => id + 1);
+    return {
+      label,
+      completed: false,
+      edited: false,
+      id: id,
+      vision: true,
+      date: new Date(),
+      time: taskTime,
+      timer: [0, 0],
     };
   }
 
-  deleteTask = (id) => {
-    this.setState(({ toDoData }) => {
+  const deleteTask = (id) => {
+    setToDoData((toDoData) => {
       const idx = toDoData.findIndex((el) => el.id === id);
       toDoData.splice(idx, 1);
       const before = toDoData.slice(0, idx);
       const after = toDoData.slice(idx);
       const newArr = [...before, ...after];
-      return {
-        toDoData: newArr,
-      };
+      return newArr;
     });
   };
 
-  addTask = (text, time) => {
+  const addTask = (text, time) => {
     let newTask;
     if (text.split("").length !== 0 && text.split("")[0] !== " " && time) {
-      newTask = this.createToDoItem(text, time);
-      this.setState(({ toDoData }) => {
+      newTask = createToDoItem(text, time);
+      setToDoData((toDoData) => {
         const newArr = [...toDoData, newTask];
-        return {
-          toDoData: newArr,
-        };
+        return newArr;
       });
     }
   };
 
-  onToggleCompleted = (id) => {
-    this.setState(({ toDoData }) => {
+  const onToggleCompleted = (id) => {
+    setToDoData((toDoData) => {
       const idx = toDoData.findIndex((el) => el.id === id);
       const oldTask = toDoData[idx];
       const newTask = { ...oldTask, completed: !oldTask.completed };
       const before = toDoData.slice(0, idx);
       const after = toDoData.slice(idx + 1);
       const newArr = [...before, newTask, ...after];
-      return {
-        toDoData: newArr,
-      };
+      return newArr;
     });
   };
 
-  onToggleEdited = (id, text) => {
-    this.setState(({ toDoData }) => {
+  const onToggleEdited = (id, text) => {
+    setToDoData((toDoData) => {
       const idx = toDoData.findIndex((el) => el.id === id);
       const oldTask = toDoData[idx];
       const newTask = {
@@ -66,108 +68,83 @@ export default class App extends React.Component {
       const before = toDoData.slice(0, idx);
       const after = toDoData.slice(idx + 1);
       const newArr = [...before, newTask, ...after];
-      if (!oldTask.completed)
-        return {
-          toDoData: newArr,
-        };
+      if (!oldTask.completed) {
+        return newArr;
+      }
     });
   };
 
-  statusFilter = (text) => {
+  const statusFilter = (text) => {
     if (text === "completed") {
-      this.setState(({ toDoData }) => {
-        for (const el of toDoData) {
+      setToDoData((toDoData) => {
+        const copy = toDoData.slice(0)
+        for (const el of copy) {
           if (el.completed === false) {
             el.vision = false;
           } else el.vision = true;
         }
-        return {
-          toDoData: this.state.toDoData,
-        };
+        return copy
       });
     }
     if (text === "all") {
-      this.setState(({ toDoData }) => {
-        for (const el of toDoData) {
+      setToDoData((toDoData) => {
+        const copy = toDoData.slice(0)
+        for (const el of copy) {
           if (el.vision === false) {
             el.vision = true;
           }
         }
-        return {
-          toDoData: this.state.toDoData,
-        };
+        return copy
       });
     }
     if (text === "active") {
-      this.setState(({ toDoData }) => {
-        for (const el of toDoData) {
+      setToDoData((toDoData) => {
+        const copy = toDoData.slice(0)
+        for (const el of copy) {
           if (el.completed === true) {
             el.vision = false;
           } else el.vision = true;
         }
-        return {
-          toDoData: this.state.toDoData,
-        };
+        return copy
       });
     }
   };
 
-  clearCompleted = () => {
-    this.setState(({ toDoData }) => {
-      const arrId = [];
-      for (const el of toDoData) {
-        if (el.completed === true) {
-          arrId.push(el.id);
-        }
-      }
-      for (const el of arrId) {
-        this.deleteTask(el);
-      }
+  const clearCompleted = () => {
+    setToDoData((toDoData) => {
+      const arr = toDoData.filter((el) => el.completed === false);
+      return arr || [];
     });
   };
 
-  timeToTask = (arr, id) => {
-    const { toDoData } = this.state;
+  const timeToTask = (arr, id) => {
     const idx = toDoData.findIndex((el) => el.id === id);
     const task = toDoData[idx];
     task.timer = arr;
-    this.setState({ toDoData });
+    setToDoData(toDoData || []);
   };
 
-  createToDoItem(label, taskTime) {
-    return {
-      label,
-      completed: false,
-      edited: false,
-      id: this.taskId++,
-      vision: true,
-      date: new Date(),
-      time: taskTime,
-      timer: [0, 0, 0],
-    };
-  }
+  const completedCount =
+    toDoData !== undefined
+      ? toDoData.filter((el) => el.completed === false).length
+      : 0;
 
-  render() {
-    const completedCount = this.state.toDoData.filter(
-      (el) => el.completed === false
-    ).length;
-
-    return (
-      <div className="ToDoApp">
-        <ToDoForm onAdd={this.addTask} />
-        <ToDoList
-          todos={this.state.toDoData}
-          onDeleted={this.deleteTask}
-          onToggleCompleted={this.onToggleCompleted}
-          onToggleEdited={this.onToggleEdited}
-          timeToTask={this.timeToTask}
-        />
-        <Footer
-          completedCount={completedCount}
-          statusFilter={this.statusFilter}
-          clearCompleted={this.clearCompleted}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="ToDoApp">
+      <ToDoForm onAdd={addTask} />
+      <ToDoList
+        todos={toDoData}
+        onDeleted={deleteTask}
+        onToggleCompleted={onToggleCompleted}
+        onToggleEdited={onToggleEdited}
+        timeToTask={timeToTask}
+      />
+      <Footer
+        completedCount={completedCount}
+        statusFilter={statusFilter}
+        clearCompleted={clearCompleted}
+      />
+    </div>
+  );
 }
+export default App;
